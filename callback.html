@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TikTok-Anmeldung – HypeClip</title>
+  <meta name="description" content="Zeigt den TikTok-Autorisierungscode nur in diesem Browser. Es wird nichts weitergesendet.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="wordmark" href="index.html">HypeClip</a>
+    <nav class="nav" aria-label="Seiten">
+      <a href="index.html">Start</a>
+      <a href="privacy.html">Datenschutz</a>
+      <a href="terms.html">Bedingungen</a>
+      <a href="impressum.html">Impressum</a>
+    </nav>
+  </header>
+  <main>
+    <p class="lang-jump"><a href="#de">Deutsch</a> · <a href="#en">English</a></p>
+
+    <section id="de" lang="de">
+      <h1>TikTok-Anmeldung</h1>
+      <p class="lede">Kopiere diesen Code zurück ins Terminal.</p>
+      <p>TikTok leitet nach der Zustimmung hierher. Der Code bleibt in diesem Browser. Diese Seite sendet ihn nirgendwo hin: kein Server, kein Formular, keine Analyse.</p>
+    </section>
+    <section id="en" lang="en">
+      <h2>English</h2>
+      <p class="lede">Copy this code back into the terminal.</p>
+      <p>TikTok redirects here after you approve. The code stays in this browser. This page does not send it anywhere: no server, no form, no analytics.</p>
+    </section>
+
+    <label for="code">Autorisierungscode / authorization code</label>
+    <textarea id="code" class="code-box" readonly spellcheck="false" aria-describedby="hint"></textarea>
+    <button type="button" class="copy-button" id="copy">Kopieren / Copy</button>
+    <p id="status" role="status"></p>
+    <p id="hint">Du kannst auch die ganze Adresse aus der Adresszeile ins Terminal einfügen. Darin steckt <code>state</code>, den HypeClip prüft. / You can paste the full address-bar URL instead. It includes <code>state</code>, which HypeClip checks.</p>
+    <noscript>
+      <p>Ohne JavaScript den Code aus der Adresszeile kopieren: der Wert hinter <code>code=</code>. / Without JavaScript, copy the value after <code>code=</code> from the address bar.</p>
+    </noscript>
+  </main>
+  <footer class="site-footer">
+    <nav aria-label="Fußzeile">
+      <a href="index.html">Start</a>
+      <a href="privacy.html">Datenschutz</a>
+      <a href="terms.html">Nutzungsbedingungen</a>
+      <a href="impressum.html">Impressum</a>
+      <a href="callback.html">TikTok-Anmeldung</a>
+    </nav>
+    <p>Christoph Kövi · <a href="mailto:c.koevi@gmx.ch">c.koevi@gmx.ch</a></p>
+  </footer>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var code = params.get("code") || "";
+      var error = params.get("error");
+      var box = document.getElementById("code");
+      var status = document.getElementById("status");
+      var button = document.getElementById("copy");
+
+      function show(message) {
+        status.textContent = message;
+      }
+
+      if (error) {
+        box.value = "";
+        show("TikTok hat einen Fehler gemeldet: " + error + " / TikTok returned an error: " + error);
+        button.disabled = true;
+        return;
+      }
+      if (!code) {
+        box.value = "";
+        show("Noch kein Code. Diese Seite füllt sich, wenn TikTok nach der Zustimmung hierher leitet. / No code yet. This page fills in after TikTok redirects here.");
+        button.disabled = true;
+        return;
+      }
+      box.value = code;
+      button.addEventListener("click", function () {
+        var copied = function () {
+          show("Kopiert. / Copied.");
+        };
+        var manual = function () {
+          box.focus();
+          box.select();
+          show("Bitte den Code manuell kopieren. / Select the code and copy it manually.");
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code).then(copied).catch(manual);
+        } else {
+          manual();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
